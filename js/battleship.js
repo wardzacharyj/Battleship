@@ -416,6 +416,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         input_submarine_holder.classList.remove("is-dirty");
         input_submarine_holder.classList.remove("is-invalid");
         input_submarine_holder.classList.remove("is-focused");
+
+        btn_confirm.setAttribute("disabled",true);
     }
 
     function confirm(){

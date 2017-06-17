@@ -923,7 +923,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         mainBoard.classList.add("hidden");
         leaderboard.classList.remove("hidden");
 
-
+        alert(winner_name+" won the game!");
 
     }
 

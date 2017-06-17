@@ -20,7 +20,7 @@ Handed in date:  June 17th
 
 Source code file name(s):
 
-battleship.html     --      skelton of layouts
+battleship.html     --      skeleton of layouts
 
 js/battleship.js    --      contains all logic including the dynamic grid building
 css/mycss.css       --      contains all custom styles
@@ -32,7 +32,7 @@ css/mycss.css       --      contains all custom styles
 Other file name(s) (if relevant):
 
 
-css/material~       --      used for making project more readable for grader
+css/material.css~       --      used for making project more readable for grader
 
 
 
@@ -44,6 +44,7 @@ Yes
 If not, what is/are the error(s) and which parts of your program run
 correctly?:
 
+I did not encounter any errors in my final tests.
 
 
 
@@ -52,7 +53,16 @@ correctly?:
 Additional comments to the grader:
 
 I took the requirements for coordinate entry very strictly. I was not sure if he wanted us to accept reverse coordinate
-entries such as A:A5-A1. As I was unsure I only based my validation soley off of his examples.
+entries such as A:A5-A1. As I was unsure I based my validation solely off of his examples provided in the readme.
+In addition I collect input from the page rather than with input pop-ups. The final score board is displayed
+right after one user wins. It is loaded from a json array stored in local storage. In order to ensure score board never
+goes past 10 players I trim the worst score off of the array when it becomes greater than size 10. Similarly, in order
+to stop recording new players  on the leaderboard after its been filled with perfect scores I keep a perfect_score variable in
+local storage. Once the count reaches 10 I stop saving scores, however the scoreboard will be displayed regardless.
+
+Please let me know if you run into any issues running my project.
+
+Thank you, Zach
 
 
 

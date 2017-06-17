@@ -269,8 +269,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var start = test[0];
         var end = test[1];
 
-        console.log(start);
-        console.log(end);
 
         var numDiff = parseInt(end.substring(1))-parseInt(start.substring(1))+1;
         var letterDiff = end.charCodeAt(0)-start.charCodeAt(0)+1;
@@ -421,7 +419,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function confirm(){
-        console.log("CONFIRM");
         if(turn == 0){
             turn += 1;
             var s = 0;
@@ -486,20 +483,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function nextTurn(){
         turn_switch_panel.classList.add("hidden");
         mainBoard.classList.remove("hidden");
-        console.log("P1");
-        console.log(p1_aircraft_coor);
-        console.log(p1_battleship_coor);
-        console.log(p1_submarine_coor);
-        console.log("-----");
-
-        console.log("P2");
-        console.log(p2_aircraft_coor);
-        console.log(p2_battleship_coor);
-        console.log(p2_submarine_coor);
-        console.log("-----");
-
-
-
         paintBoard();
     }
 
@@ -696,7 +679,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         shots.push(obj);
 
-        console.log(shots);
 
         var concentratedHits = 0;
         array.forEach(function (point) {
@@ -706,7 +688,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 +'"hit" : '+ true
                 +'}';
 
-            console.log(point);
             if(shots.indexOf(check) > -1){
                 concentratedHits += 1;
             }
@@ -856,7 +837,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                             if (item.srcElement.tagName === "P") {
                                 if(!item.srcElement.classList.contains("hit") &&
                                     !item.srcElement.classList.contains("miss")){
-                                    console.log(item.srcElement.parentNode.id);
+                                    // console.log(item.srcElement.parentNode.id);
                                     fire(item.srcElement.parentNode.id);
                                 }
 
@@ -868,7 +849,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                     fire(item.srcElement.id);
                             }
                             else{
-                                console.log(item.srcElement);
+                                // console.log(item.srcElement);
                             }
                         });
                     }
@@ -898,10 +879,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         var score_history = JSON.parse(localStorage.getItem("score_history"));
         var perfect_score = localStorage.getItem("perfect_score");
 
-        console.log("SCORE HISTORY");
-        console.log(score_history);
-        console.log("PERFECT SCORE COUNT");
-        console.log(perfect_score);
+
 
         if(perfect_score < 10){
 
@@ -929,8 +907,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         }
 
-        console.log(score_history);
-
         var leaderboard = document.getElementById("leader_board");
 
         var holder = 0;
@@ -949,7 +925,4 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-
 });
-
-

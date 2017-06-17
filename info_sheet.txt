@@ -6,21 +6,24 @@ You must submit an information sheet with every assignment. Also be sure
 to submit all materials following the procedures described on the
 submission procedures page.
 
-Name:  
+Name:  Zachary Ward
 
-Lecture section:  
+Lecture section:  MW 2:30
 
-Recitation day and time:  
+Recitation day and time:  M 4:30
 
-Assignment #:  
+Assignment #:  1
 
-Program due date:  
+Program due date:  June 18th 11:59
 
-Handed in date:  
+Handed in date:  June 17th
 
 Source code file name(s):
 
+battleship.html     --      skelton of layouts
 
+js/battleship.js    --      contains all logic including the dynamic grid building
+css/mycss.css       --      contains all custom styles
 
 
 
@@ -29,12 +32,14 @@ Source code file name(s):
 Other file name(s) (if relevant):
 
 
-
+css/material~       --      used for making project more readable for grader
 
 
 
 
 Does your project run without error?:
+
+Yes
 
 If not, what is/are the error(s) and which parts of your program run
 correctly?:
@@ -44,9 +49,10 @@ correctly?:
 
 
 
-
 Additional comments to the grader:
 
+I took the requirements for coordinate entry very strictly. I was not sure if he wanted us to accept reverse coordinate
+entries such as A:A5-A1. As I was unsure I only based my validation soley off of his examples.
 
 
 

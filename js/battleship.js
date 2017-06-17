@@ -90,14 +90,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var btn_confirm = document.getElementById("confirm");
     btn_confirm.setAttribute("disabled",true);
-
-    var btn_clear = document.getElementById("clear");
-
-
-    btn_clear.addEventListener("click", function(){
-        clearForm(true);
-    });
-
     btn_confirm.addEventListener("click",confirm);
 
 
@@ -143,7 +135,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                 item.firstChild.textContent = default_tile;
                             });
                         }
-                        if (parsed.length == 7) p1_aircraft_coor = buildCoorArray(shortForm, p1_battleship_coor, p1_submarine_coor, input_aircraft);
+                        if (!parsed.includes("(")) p1_aircraft_coor = buildCoorArray(shortForm, p1_battleship_coor, p1_submarine_coor, input_aircraft);
                         else p1_aircraft_coor = buildCoorArray(longForm, p1_battleship_coor, p1_submarine_coor, input_aircraft_holder);
                     }
                     else {
@@ -155,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         p2_aircraft_coor.forEach(function (item) {
                             item.firstChild.textContent = default_tile;
                         });
-                        if (parsed.length == 7) p2_aircraft_coor = buildCoorArray(shortForm, p2_battleship_coor, p2_submarine_coor, input_aircraft);
+                        if (!parsed.includes("(")) p2_aircraft_coor = buildCoorArray(shortForm, p2_battleship_coor, p2_submarine_coor, input_aircraft);
                         else p2_aircraft_coor = buildCoorArray(longForm, p2_battleship_coor, p2_submarine_coor, input_aircraft);
                     }
                     break;
@@ -166,7 +158,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                 item.firstChild.textContent = default_tile;
                             });
                         }
-                        if (parsed.length == 7) p1_battleship_coor = buildCoorArray(shortForm, p1_aircraft_coor, p1_submarine_coor, input_battleship);
+                        if (!parsed.includes("(")) p1_battleship_coor = buildCoorArray(shortForm, p1_aircraft_coor, p1_submarine_coor, input_battleship);
                         else p1_battleship_coor = buildCoorArray(longForm, p1_aircraft_coor, p1_submarine_coor, input_battleship);
                     }
                     else {
@@ -175,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                 item.firstChild.textContent = default_tile;
                             });
                         }
-                        if (parsed.length == 7) p2_battleship_coor = buildCoorArray(shortForm, p2_aircraft_coor, p2_submarine_coor, input_battleship);
+                        if (!parsed.includes("(")) p2_battleship_coor = buildCoorArray(shortForm, p2_aircraft_coor, p2_submarine_coor, input_battleship);
                         else p2_battleship_coor = buildCoorArray(longForm, p2_aircraft_coor, p2_submarine_coor, input_battleship);
                     }
                     break;
@@ -186,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                 item.firstChild.textContent = default_tile;
                             });
                         }
-                        if (parsed.length == 7) p1_submarine_coor = buildCoorArray(shortForm, p1_aircraft_coor, p1_battleship_coor, input_submarine);
+                        if (!parsed.includes("(")) p1_submarine_coor = buildCoorArray(shortForm, p1_aircraft_coor, p1_battleship_coor, input_submarine);
                         else p1_submarine_coor = buildCoorArray(longForm, p1_aircraft_coor, p1_battleship_coor, input_submarine);
                     }
                     else {
@@ -195,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                                 item.firstChild.textContent = default_tile;
                             });
                         }
-                        if (parsed.length == 7) p2_submarine_coor = buildCoorArray(shortForm, p2_aircraft_coor, p2_battleship_coor, input_submarine);
+                        if (!parsed.includes("(")) p2_submarine_coor = buildCoorArray(shortForm, p2_aircraft_coor, p2_battleship_coor, input_submarine);
                         else p2_submarine_coor = buildCoorArray(longForm, p2_aircraft_coor, p2_battleship_coor, input_submarine);
                     }
                     break;
@@ -268,12 +260,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     function buildCoorArray(coor, array1, array2, input){
 
-        var start = coor.substring(0,2);
-        var end = coor.substring(3);
 
-        var numDiff = parseInt(end.charAt(1)-start.charAt(1))+1;
+        var test = coor.split("-");
+
+        //var start = coor.substring(0,2);
+        //var end = coor.substring(3);
+
+        var start = test[0];
+        var end = test[1];
+
+        console.log(start);
+        console.log(end);
+
+        var numDiff = parseInt(end.substring(1))-parseInt(start.substring(1))+1;
         var letterDiff = end.charCodeAt(0)-start.charCodeAt(0)+1;
-        var coorArray = [];//[parseInt(end.charAt(1)-start.charAt(1))];
+        var coorArray = [];
 
 
         if(start.charAt(0) == end.charAt(0)){
@@ -284,7 +285,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         else {
             var nextChar = start.charAt(0);
             for(var z = 0; z < letterDiff; z++){
-                coorArray.push(document.getElementById(nextChar+start.charAt(1)));
+                coorArray.push(document.getElementById(nextChar+start.substring(1)));
                 nextChar = String.fromCharCode(nextChar.charCodeAt(0) + 1);
             }
         }
@@ -383,32 +384,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
             input_name.value.length >= 1 && input_aircraft.value.length >= 1 && input_battleship.value.length >=1 && input_submarine.value.length >= 1;
     }
 
-    function clearForm(isReset){
+    function clearForm(){
 
-        if(isReset) {
-            if (turn == 0) {
-                p1_name = "";
-                p1_aircraft_coor.forEach(cleanShip);
-                p1_battleship_coor.forEach(cleanShip);
-                p1_submarine_coor.forEach(cleanShip);
+        p1_aircraft_coor.forEach(cleanShip);
+        p1_battleship_coor.forEach(cleanShip);
+        p1_submarine_coor.forEach(cleanShip);
 
-                p1_aircraft_coor = [];
-                p1_battleship_coor = [];
-                p1_submarine_coor = [];
-
-            }
-            else {
-                p2_name = "";
-                p2_aircraft_coor.forEach(cleanShip);
-                p2_battleship_coor.forEach(cleanShip);
-                p2_submarine_coor.forEach(cleanShip);
-
-                p2_aircraft_coor = [];
-                p2_battleship_coor = [];
-                p2_submarine_coor = [];
-            }
-
-        }
 
         function cleanShip(item){
             var element = document.getElementById(item);
@@ -440,6 +421,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function confirm(){
+        console.log("CONFIRM");
         if(turn == 0){
             turn += 1;
             var s = 0;
@@ -462,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 s++;
             });
 
-            clearForm(false);
+            clearForm();
 
             document.getElementById("setup_name").textContent = "Player 2";
         }
@@ -504,6 +486,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function nextTurn(){
         turn_switch_panel.classList.add("hidden");
         mainBoard.classList.remove("hidden");
+        console.log("P1");
+        console.log(p1_aircraft_coor);
+        console.log(p1_battleship_coor);
+        console.log(p1_submarine_coor);
+        console.log("-----");
+
+        console.log("P2");
+        console.log(p2_aircraft_coor);
+        console.log(p2_battleship_coor);
+        console.log(p2_submarine_coor);
+        console.log("-----");
+
+
+
         paintBoard();
     }
 
@@ -519,6 +515,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
             miss.forEach(function(item){
                item.classList.remove("miss");
             });
+
+
+            var badTiles = document.querySelectorAll("div.mdl-cell--1-col.g_tile.mdl-typography--text-center");
+            badTiles.forEach(function(item){
+                var child = item.firstChild;
+                if(child.textContent === "A" || child.textContent === "B" || child.textContent === "S")
+                    child.textContent = default_tile;
+            });
+
         }
         turn_switch_panel.classList.remove("hidden");
 
@@ -608,6 +613,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 var tile = document.getElementById(info);
                 tile.firstChild.textContent = "S";
             });
+
             p2_shots.forEach(function(item){
                 var jsonObj = JSON.parse(item);
                 var info = "N"+jsonObj.pos;
@@ -925,6 +931,19 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         console.log(score_history);
 
+        var leaderboard = document.getElementById("leader_board");
+
+        var holder = 0;
+
+        score_history.forEach(function(item){
+            var name = document.getElementById(holder+"_name");
+            var score = document.getElementById(holder+"_score");
+            name.textContent = item.name;
+            score.textContent = item.score;
+            holder++;
+        });
+        mainBoard.classList.add("hidden");
+        leaderboard.classList.remove("hidden");
 
 
 

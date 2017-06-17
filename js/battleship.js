@@ -14,6 +14,10 @@ var p1_aircraft_coor = [];
 var p1_battleship_coor = [];
 var p1_submarine_coor = [];
 
+var p1_aircraft_sunk = false;
+var p1_battleship_sunk = false;
+var p1_submarine_sunk = false;
+
 
 var p2_name;
 var p2_shots = [];
@@ -24,11 +28,24 @@ var p2_aircraft_coor = [];
 var p2_battleship_coor = [];
 var p2_submarine_coor = [];
 
+var p2_aircraft_sunk = false;
+var p2_battleship_sunk = false;
+var p2_submarine_sunk = false;
+
 
 var default_tile = "•";
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
+
+    if(localStorage.getItem("perfect_score") == null ||  localStorage.getItem("score_history") == null){
+        var sc = [];
+        localStorage.setItem("score_history",JSON.stringify(sc));
+        localStorage.setItem("perfect_score",0);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////
 
     var mainBoard = document.getElementById("battleship_panel");
 
@@ -45,6 +62,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var turn_banner = document.getElementById("turn_name_indicator");
     var turn_btn = document.getElementById("btn_switch_turn");
     turn_btn.addEventListener("click",nextTurn);
+
+
 
     //////////////////////////////////////////////////////////////////////////////
 
@@ -483,11 +502,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
         Called each turn switch
      */
     function nextTurn(){
-        hideTurnSwitch();
+        turn_switch_panel.classList.add("hidden");
+        mainBoard.classList.remove("hidden");
         paintBoard();
     }
 
     function showTurnSwitch(){
+        if(!mainBoard.classList.contains("hidden")){
+            mainBoard.classList.add("hidden");
+            var hits = document.querySelectorAll("p.hit");
+            hits.forEach(function(item){
+                item.classList.remove("hit");
+            });
+
+            var miss = document.querySelectorAll("p.miss");
+            miss.forEach(function(item){
+               item.classList.remove("miss");
+            });
+        }
         turn_switch_panel.classList.remove("hidden");
 
         if(turn == 0){
@@ -508,17 +540,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-    function hideTurnSwitch(){
-        turn_switch_panel.classList.add("hidden");
-        mainBoard.classList.remove("hidden");
-
-    }
-
     function paintBoard(){
-        console.log("PAINTING");
+
 
         if(turn == 0){
-            console.log("PAINTING 0");
+
             p1_aircraft_coor.forEach(function(item){
                 var info = "S"+item;
                 var tile = document.getElementById(info);
@@ -535,30 +561,78 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 tile.firstChild.textContent = "S";
             });
             p1_shots.forEach(function(item){
-                //var info = "N"+item;
-                //var tile = document.getElementById(info);
+
+                var jsonObj = JSON.parse(item);
+
+                var info = "N"+jsonObj.pos;
+
+                var tile = document.getElementById(info).firstChild;
+                if(jsonObj.hit){
+                    tile.classList.add("hit")
+                }
+                else{
+                    tile.classList.add("miss")
+                }
+
             });
 
             p2_shots.forEach(function(item){
                 //var info = "N"+item;
                 //var tile = document.getElementById(info);
+                var jsonObj = JSON.parse(item);
+                var info = "S"+jsonObj.pos;
+                var tile = document.getElementById(info).firstChild;
+
+                if(jsonObj.hit){
+                    tile.classList.add("hit")
+                }
+                else{
+                    tile.classList.add("miss")
+                }
             });
         }
         else{
-            console.log("PAINTING 1");
 
             p2_aircraft_coor.forEach(function(item){
-
+                var info = "S"+item;
+                var tile = document.getElementById(info);
+                tile.firstChild.textContent = "A";
             });
-            p2_aircraft_coor.forEach(function(item){
-
+            p2_battleship_coor.forEach(function(item){
+                var info = "S"+item;
+                var tile = document.getElementById(info);
+                tile.firstChild.textContent = "B";
             });
-            p2_aircraft_coor.forEach(function(item){
-
+            p2_submarine_coor.forEach(function(item){
+                var info = "S"+item;
+                var tile = document.getElementById(info);
+                tile.firstChild.textContent = "S";
             });
             p2_shots.forEach(function(item){
+                var jsonObj = JSON.parse(item);
+                var info = "N"+jsonObj.pos;
+                var tile = document.getElementById(info).firstChild;
+                if(jsonObj.hit){
+                    tile.classList.add("hit")
+                }
+                else{
+                    tile.classList.add("miss")
+                }
+            });
+            p1_shots.forEach(function(item){
+                //var info = "N"+item;
+                //var tile = document.getElementById(info);
+                var jsonObj = JSON.parse(item);
+                var info = "S"+jsonObj.pos;
+                var tile = document.getElementById(info).firstChild ;
 
-            })
+                if(jsonObj.hit){
+                    tile.classList.add("hit")
+                }
+                else{
+                    tile.classList.add("miss")
+                }
+            });
         }
 
 
@@ -567,9 +641,133 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function fire(c){
         if(turn == 0){
 
+            var loc = c.substring(1);
+
+            if(p2_aircraft_coor.indexOf(loc) > -1)
+                paintHit(c,p2_aircraft_coor, p1_shots,"Aircraft Carrier",5);
+            else if(p2_battleship_coor.indexOf(loc) > -1)
+                paintHit(c,p2_battleship_coor, p1_shots,"Battleship",4);
+            else if(p2_submarine_coor.indexOf(loc) > -1)
+                paintHit(c,p2_submarine_coor, p1_shots,"Submarine",3);
+            else
+                paintMiss(c, p1_shots);
         }
         else{
+            var loc = c.substring(1);
 
+            if(p1_aircraft_coor.indexOf(loc) > -1)
+                paintHit(c,p1_aircraft_coor, p2_shots,"Aircraft Carrier",5);
+            else if(p1_battleship_coor.indexOf(loc) > -1)
+                paintHit(c,p1_battleship_coor, p2_shots,"Battleship",4);
+            else if(p1_submarine_coor.indexOf(loc) > -1)
+                paintHit(c,p1_submarine_coor, p2_shots,"Submarine",3);
+            else
+                paintMiss(c,p2_shots);
+        }
+
+        if(turn == 0) turn = 1;
+        else turn = 0;
+
+        if(p1_aircraft_sunk && p1_battleship_sunk && p1_submarine_sunk){
+            win(1);
+        }
+        else if(p2_aircraft_sunk && p2_battleship_sunk && p2_submarine_sunk){
+            win(2);
+        }
+        else{
+            setTimeout(function(){showTurnSwitch();}, 500);
+        }
+
+    }
+
+    function paintHit(c, array, shots, shipName, shipSize){
+        document.getElementById(c).firstChild.classList.add("hit");
+
+        var obj = '{'
+            +'"pos" : "'+c.substring(1)+'",'
+            +'"hit" : '+ true
+            +'}';
+
+        shots.push(obj);
+
+        console.log(shots);
+
+        var concentratedHits = 0;
+        array.forEach(function (point) {
+
+            var check = '{'
+                +'"pos" : "'+point+'",'
+                +'"hit" : '+ true
+                +'}';
+
+            console.log(point);
+            if(shots.indexOf(check) > -1){
+                concentratedHits += 1;
+            }
+        });
+
+        if(concentratedHits == shipSize) {
+            if(turn == 0){
+                switch (shipSize){
+                    case 5:
+                        p1_aircraft_sunk = true;
+                        break;
+                    case 4:
+                        p1_battleship_sunk = true;
+                        break;
+                    case 3:
+                        p1_submarine_sunk = true;
+                        break;
+                }
+            }
+            else{
+                switch (shipSize){
+                    case 5:
+                        p2_aircraft_sunk = true;
+                        break;
+                    case 4:
+                        p2_battleship_sunk = true;
+                        break;
+                    case 3:
+                        p2_submarine_sunk = true;
+                        break;
+                }
+            }
+            alert("Direct hit captain! You sunk the enemy's " + shipName);
+
+        }
+        else
+            alert("Hit!");
+
+
+        if(turn == 0){
+            p1_hit_count += 1;
+        }
+        else{
+            p2_hit_count += 1;
+        }
+    }
+
+    function paintMiss(c, shots){
+        document.getElementById(c).firstChild.classList.add("miss");
+
+        var obj = '{'
+            +'"pos" : "'+c.substring(1)+'",'
+            +'"hit" : '+ false
+            +'}';
+
+
+        shots.push(obj);
+
+        alert("Miss, better luck next time");
+
+
+
+        if(turn == 0){
+            p1_miss_count += 1;
+        }
+        else{
+            p2_miss_count += 1;
         }
     }
 
@@ -647,15 +845,88 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         gTileY.appendChild(letterLabel);
 
                     }
-                    gTileY.addEventListener("click",function(item){
-                        if(item.srcElement.tagName = "P"){
-                            console.log(item.srcElement.parentNode.id);
-                            fire(item.srcElement.parentNode.id);
-                        }
-                    })
+                    if(direction == "N") {
+                        gTileY.addEventListener("click", function (item) {
+                            if (item.srcElement.tagName === "P") {
+                                if(!item.srcElement.classList.contains("hit") &&
+                                    !item.srcElement.classList.contains("miss")){
+                                    console.log(item.srcElement.parentNode.id);
+                                    fire(item.srcElement.parentNode.id);
+                                }
+
+                            }
+                            else if(item.srcElement.children.length == 1 && item.srcElement.classList.contains("g_tile")){
+                                if(!item.srcElement.firstChild.classList.contains("hit") &&
+                                    !item.srcElement.firstChild.classList.contains("miss"))
+
+                                    fire(item.srcElement.id);
+                            }
+                            else{
+                                console.log(item.srcElement);
+                            }
+                        });
+                    }
                 }
             }
         }
+
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    function win(player){
+
+        var winner_score = 24;
+        var winner_name;
+
+        if(player == 1){
+            winner_score = winner_score - (2*p2_hit_count);
+            winner_name = p1_name;
+        }
+        else{
+            winner_score = winner_score - (2*p1_hit_count);
+            winner_name = p2_name;
+        }
+
+        var score_history = JSON.parse(localStorage.getItem("score_history"));
+        var perfect_score = localStorage.getItem("perfect_score");
+
+        console.log("SCORE HISTORY");
+        console.log(score_history);
+        console.log("PERFECT SCORE COUNT");
+        console.log(perfect_score);
+
+        if(perfect_score < 10){
+
+
+            var entry = JSON.parse('{ "name": '+'"'+winner_name+'", "score": '+winner_score+"}");
+
+
+            if(winner_score == 24){
+                var new_score = parseInt(perfect_score);
+                new_score += 1;
+                localStorage.setItem("perfect_score", new_score);
+            }
+
+            score_history.push(entry);
+
+            score_history.sort(function(a, b) {
+                return parseInt(b.score) - parseInt(a.score);
+            });
+
+            if(score_history.length > 10){
+                score_history.pop();
+            }
+
+            localStorage.setItem("score_history",JSON.stringify(score_history));
+
+        }
+
+        console.log(score_history);
+
+
+
 
     }
 

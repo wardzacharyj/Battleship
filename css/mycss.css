@@ -72,12 +72,10 @@ hr.style-six {
 .tile > p{
     margin: 0;
     margin-top: 5px;
-    font-size: 20px;
-    color: white;
+    font-size: 30px;
+    color: #CFD8DC;
     font-weight: bold;
-
 }
-
 
 .row{
     margin: 0;
@@ -95,8 +93,33 @@ hr.style-six {
 
 .g_tile > p{
     margin: 0;
-    margin-top: 2px;
     font-size: 12px;
+    color: #CFD8DC;
+    font-weight: bold;
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+
+
+.g_tile > p.hit{
+    margin: 0;
+    margin-top: 2px;
+    font-size: 24px;
+    color: #F44336;
+    font-weight: bold;
+}
+
+.g_tile > p.miss{
+    margin: 0;
+    margin-top: 2px;
+    font-size: 48px;
     color: white;
     font-weight: bold;
 }
@@ -132,7 +155,7 @@ hr.style-six {
 .north-board{
     width: 524px;
     height: 330px;
-    background-color:  #455A64;
+    background-color:  #37474F;
 }
 
 .turn_stat{
